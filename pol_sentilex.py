@@ -50,5 +50,3 @@ while True:
     else:
         print("entrada inválida.")
         continue
-
-        
