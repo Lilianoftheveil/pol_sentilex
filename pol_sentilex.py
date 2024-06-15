@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-import re   # importa o módulo de expressões regulares
+import re  
 POL = {}
 
-def sentilex(): # abre o sentilex e cria uma lista com os lemas / expressões e suas respectivas polaridades 
-    with open("sentilexjj.txt") as f:
+def sentilex(): 
+    with open("sentilex.txt") as f:
         for linha in f:
             linha = re.sub(r"ANOT=.*", "", linha)
             lista = re.split(r";",linha)
@@ -25,21 +25,49 @@ def sentilex(): # abre o sentilex e cria uma lista com os lemas / expressões e 
 sentilex()
 
 
-def sentimento(a):  # calcula a polaridade total do texto          
+def sentimento(a):         #total
     lp = re.findall(r"\w+", a)   
-    ptotal = 0
-    
-    for p in lp:    
-        if p in POL:
-            ptotal = ptotal + POL[p] 
+    ptotal = 0  # total
+    totalp = 0  # positivo
+    totaln = 0  # negativo
+    totalo = 0  # neutro
 
-    return (ptotal, len(lp))    # retorna a polaridade final e o número total de lemas 
+    total_pol = 0
+
+    for p in lp:    #total
+        if p in POL:
+            ptotal = ptotal + POL[p]
+            total_pol = total_pol + 1
+
+    for p in lp:    # positivo
+        if p in POL:
+            if POL[p] == 1 or POL[p] == 0.5:
+                totalp = totalp + 1
+
+    for p in lp:    # negativo
+        if p in POL:
+            if POL[p] == -1 or POL[p] == -0.5:
+                totaln = totaln + 1
+
+    for p in lp:    # neutro
+        if p in POL:
+            if POL[p] == 0 or POL[p] == 0.0:
+                totalo = totalo + 1
+
+    if ptotal < 0:
+        ptotal = "Negativo"
+    elif ptotal == 0 or ptotal ==0.0:
+        ptotal = "Neutro"
+    elif ptotal > 0:
+        ptotal = "Positivo"
+    
+    return (f"Sentimento Geral: {ptotal}", f"Positivo: {int(round(totalp / total_pol, 2)* 100)}%", f"Neutro: {int(round(totalo / total_pol, 2)* 100)}%", f"Negativo: { int(round(totaln / total_pol, 2)* 100)}%")     
 
 
 while True:
     x = input("digite 'c' para escrever um texto ou 't' para abrir arquivo .txt: ").lower()
     if x == "t":
-        y = input("caminho: ")  # nome do arquivo.txt - devidamente inserido no mesmo diretório do código -
+        y = input("caminho: ")  
         z = open(y).read()
         print(sentimento(z))
         break
