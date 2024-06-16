@@ -56,12 +56,24 @@ def sentimento(a):         #total
 
     if ptotal < 0:
         ptotal = "Negativo"
-    elif ptotal == 0 or ptotal ==0.0:
+    elif ptotal == 0 or ptotal == 0.0:
         ptotal = "Neutro"
     elif ptotal > 0:
         ptotal = "Positivo"
-    
-    return (f"Sentimento Geral: {ptotal}", f"Positivo: {int(round(totalp / total_pol, 2)* 100)}%", f"Neutro: {int(round(totalo / total_pol, 2)* 100)}%", f"Negativo: { int(round(totaln / total_pol, 2)* 100)}%")     
+
+
+    if totalp == 0 and totaln == 0:     # se positivo e negativo = 0
+        totalo = 100
+    elif totalo == 0 and totaln == 0:   # se neutro e negativo = 0
+        totalp = 100
+    elif totalo == 0 and totalp ==0:    # se neutro e positivo = 0
+        totaln = 100
+    else:
+        totalp = int(round(totalp / total_pol, 2)* 100)
+        totalo = int(round(totalo / total_pol, 2)* 100)
+        totaln = int(round(totaln / total_pol, 2)* 100)
+
+    return (f"Sentimento Geral: {ptotal}", f"Positivo: {totalp}%", f"Neutro: {totalo}%", f"Negativo: {totaln}%")     
 
 
 while True:
